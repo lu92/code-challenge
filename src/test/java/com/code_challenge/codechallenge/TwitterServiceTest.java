@@ -11,6 +11,8 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.Set;
+
 import static org.fest.assertions.Assertions.assertThat;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -32,7 +34,6 @@ public class TwitterServiceTest {
         User user = twitterService.createUser("nick");
 
         // then
-        assertThat(user.getId()).isEqualTo(1);
         assertThat(user.getNickname()).isEqualTo("nick");
     }
 
@@ -55,7 +56,7 @@ public class TwitterServiceTest {
         User follower = twitterService.createUser("follower");
 
         // when
-        String message = twitterService.addFollower(user.getId(), follower.getId());
+        String message = twitterService.addFollower(user.getNickname(), follower.getNickname());
 
         // then
         assertThat(message).isEqualTo("Given follower has been added to followers of user");
@@ -68,10 +69,10 @@ public class TwitterServiceTest {
 
         // given
         User follower = twitterService.createUser("follower");
-        long fakeUserId = -1;
+        String fakeUser = "fakeUser";
 
         // when
-        twitterService.addFollower(fakeUserId, follower.getId());
+        twitterService.addFollower(fakeUser, follower.getNickname());
     }
 
     @Test
@@ -81,10 +82,10 @@ public class TwitterServiceTest {
 
         // given
         User user = twitterService.createUser("user");
-        long fakeFollowerId = -1;
+        String fakeFollower = "fakeFollower";
 
         // when
-        twitterService.addFollower(user.getId(), fakeFollowerId);
+        twitterService.addFollower(user.getNickname(), fakeFollower);
     }
 
     @Test
@@ -95,10 +96,10 @@ public class TwitterServiceTest {
         // given
         User user = twitterService.createUser("user");
         User follower = twitterService.createUser("follower");
-        twitterService.addFollower(user.getId(), follower.getId());
+        twitterService.addFollower(user.getNickname(), follower.getNickname());
 
         // when
-        twitterService.addFollower(user.getId(), follower.getId());
+        twitterService.addFollower(user.getNickname(), follower.getNickname());
     }
 
     @Test
@@ -106,10 +107,10 @@ public class TwitterServiceTest {
         // given
         User user = twitterService.createUser("user");
         User follower = twitterService.createUser("follower");
-        twitterService.addFollower(user.getId(), follower.getId());
+        twitterService.addFollower(user.getNickname(), follower.getNickname());
 
         // when
-        String message = twitterService.removeFollower(user.getId(), follower.getId());
+        String message = twitterService.removeFollower(user.getNickname(), follower.getNickname());
 
         // then
         assertThat(message).isEqualTo("Now follower does not follow by user!");
@@ -121,11 +122,11 @@ public class TwitterServiceTest {
         expectedException.expectMessage("Given user does not exist!");
 
         // given
-        long fakeUserId = -1;
+        String fakeUser = "fakeUser";
         User follower = twitterService.createUser("follower");
 
         // when
-        twitterService.removeFollower(fakeUserId, follower.getId());
+        twitterService.removeFollower(fakeUser, follower.getNickname());
     }
 
     @Test
@@ -134,23 +135,55 @@ public class TwitterServiceTest {
         expectedException.expectMessage("Given follower does not exist!");
 
         // given
-        long fakeFollowerId = -1;
+        String fakeFollower = "fakeFollower";
         User user = twitterService.createUser("user");
 
         // when
-        twitterService.removeFollower(user.getId(), fakeFollowerId);
+        twitterService.removeFollower(user.getNickname(), fakeFollower);
+    }
+
+
+    @Test
+    public void getFollowersWhenUserHasNoneTest() {
+        // given
+        User user = twitterService.createUser("user");
+
+        // when
+        Set<String> followers = twitterService.getFollowersForUser(user.getNickname());
+
+        // then
+        assertThat(followers).isEmpty();
     }
 
     @Test
-    public void removeFollowerWhenUserAndFollowerDontExistExpectedFailureTest() throws Exception {
-        expectedException.expect(UserNotFoundException.class);
-        expectedException.expectMessage("Given user and follower don't exist!");
-
+    public void getFollowersWhenUserHasOneFollowerTest() {
         // given
-        long fakeUserId = -1;
-        long fakeFollowerId = -1;
+        User user = twitterService.createUser("user");
+        User follower = twitterService.createUser("follower");
+        twitterService.addFollower(user.getNickname(), follower.getNickname());
 
         // when
-        twitterService.removeFollower(fakeUserId, fakeFollowerId);
+        Set<String> followers = twitterService.getFollowersForUser(user.getNickname());
+
+        // then
+        assertThat(followers).contains("follower");
+    }
+
+    @Test
+    public void getFollowersWhenUserHasThreeFollowerTest() {
+        // given
+        User user = twitterService.createUser("user");
+        User follower1 = twitterService.createUser("follower1");
+        User follower2 = twitterService.createUser("follower2");
+        User follower3 = twitterService.createUser("follower3");
+        twitterService.addFollower(user.getNickname(), follower1.getNickname());
+        twitterService.addFollower(user.getNickname(), follower2.getNickname());
+        twitterService.addFollower(user.getNickname(), follower3.getNickname());
+
+        // when
+        Set<String> followers = twitterService.getFollowersForUser(user.getNickname());
+
+        // then
+        assertThat(followers).contains("follower1", "follower2", "follower3");
     }
 }

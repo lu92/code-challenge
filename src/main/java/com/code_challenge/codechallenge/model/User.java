@@ -1,16 +1,28 @@
 package com.code_challenge.codechallenge.model;
 
-import lombok.AllArgsConstructor;
+import com.code_challenge.codechallenge.exceptions.FollowerAlreadyFollowsException;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Data
-@AllArgsConstructor
 public class User {
-    private long id;
     private String nickname;
+    private Set<User> followers = new HashSet<>();
+
+
+    public User(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void addFollower(User follower) {
+        if (followers.contains(follower)) {
+            throw new FollowerAlreadyFollowsException("Given follower already follows by user!");
+        }
+        followers.add(follower);
+    }
 
     @Override
     public boolean equals(Object o) {

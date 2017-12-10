@@ -1,19 +1,12 @@
 package com.code_challenge.codechallenge;
 
-import com.code_challenge.codechallenge.exceptions.FollowerAlreadyFollowsException;
-import com.code_challenge.codechallenge.exceptions.UserAlreadyExistsException;
-import com.code_challenge.codechallenge.exceptions.UserNotFoundException;
 import com.code_challenge.codechallenge.model.User;
 
-import java.util.List;
+import java.util.Set;
 
 public interface TwitterService {
-    User createUser(String nickname) throws UserAlreadyExistsException;
-
-    List<String> getFollowersForUser(String nickname) throws UserNotFoundException;
-
-    String addFollower(long userId, long followerId) throws UserNotFoundException, FollowerAlreadyFollowsException;
-
-    String removeFollower(long userId, long followerId) throws UserNotFoundException;
-
+    User createUser(String nickname);
+    Set<String> getFollowersForUser(String nickname);
+    String addFollower(String userNickname, String followerNickname);
+    String removeFollower(String userNickname, String followerNickname);
 }
