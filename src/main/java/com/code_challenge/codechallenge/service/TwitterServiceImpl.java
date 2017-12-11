@@ -1,4 +1,4 @@
-package com.code_challenge.codechallenge;
+package com.code_challenge.codechallenge.service;
 
 import com.code_challenge.codechallenge.exceptions.TweetNotFoundException;
 import com.code_challenge.codechallenge.exceptions.UserAlreadyExistsException;

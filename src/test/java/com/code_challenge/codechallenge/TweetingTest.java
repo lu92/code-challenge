@@ -4,6 +4,8 @@ import com.code_challenge.codechallenge.exceptions.TweetNotFoundException;
 import com.code_challenge.codechallenge.exceptions.UserNotFoundException;
 import com.code_challenge.codechallenge.model.Tweet;
 import com.code_challenge.codechallenge.model.User;
+import com.code_challenge.codechallenge.service.TwitterService;
+import com.code_challenge.codechallenge.service.TwitterServiceImpl;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -13,7 +15,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.stream.Stream;
 
 import static org.fest.assertions.Assertions.assertThat;

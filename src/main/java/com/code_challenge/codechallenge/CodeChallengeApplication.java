@@ -1,6 +1,7 @@
 package com.code_challenge.codechallenge;
 
 import com.code_challenge.codechallenge.model.User;
+import com.code_challenge.codechallenge.service.TwitterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;

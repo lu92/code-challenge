@@ -4,6 +4,8 @@ import com.code_challenge.codechallenge.exceptions.FollowerAlreadyFollowsExcepti
 import com.code_challenge.codechallenge.exceptions.UserAlreadyExistsException;
 import com.code_challenge.codechallenge.exceptions.UserNotFoundException;
 import com.code_challenge.codechallenge.model.User;
+import com.code_challenge.codechallenge.service.TwitterService;
+import com.code_challenge.codechallenge.service.TwitterServiceImpl;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -16,7 +18,7 @@ import java.util.Set;
 import static org.fest.assertions.Assertions.assertThat;
 
 @RunWith(MockitoJUnitRunner.class)
-public class TwitterServiceTest {
+public class ManagingUserAndFollowerTest {
 
     private TwitterService twitterService;
 
@@ -29,7 +31,7 @@ public class TwitterServiceTest {
     }
 
     @Test
-    public void createUserTest() throws UserAlreadyExistsException {
+    public void createUserTest() {
         // when
         User user = twitterService.createUser("nick");
 
@@ -38,7 +40,7 @@ public class TwitterServiceTest {
     }
 
     @Test
-    public void createUserWhenExistsExpectedFailureTest() throws Exception {
+    public void createUserWhenExistsExpectedFailureTest() {
         expectedException.expect(UserAlreadyExistsException.class);
         expectedException.expectMessage("Given nickname is used by other user!");
 
@@ -50,7 +52,7 @@ public class TwitterServiceTest {
     }
 
     @Test
-    public void addFollowerTest() throws Exception {
+    public void addFollowerTest() {
         // given
         User user = twitterService.createUser("user");
         User follower = twitterService.createUser("follower");
@@ -63,7 +65,7 @@ public class TwitterServiceTest {
     }
 
     @Test
-    public void addFollowerWhenUserDoesNotExistTest() throws Exception {
+    public void addFollowerWhenUserDoesNotExistTest() {
         expectedException.expect(UserNotFoundException.class);
         expectedException.expectMessage("Given user does not exist!");
 
@@ -76,7 +78,7 @@ public class TwitterServiceTest {
     }
 
     @Test
-    public void addFollowerWhenFollowerDoesNotExistExpectedFailureTest() throws Exception {
+    public void addFollowerWhenFollowerDoesNotExistExpectedFailureTest() {
         expectedException.expect(UserNotFoundException.class);
         expectedException.expectMessage("Given follower does not exist!");
 
@@ -89,7 +91,7 @@ public class TwitterServiceTest {
     }
 
     @Test
-    public void addFollowerWhenFollowerFollowsByUserExpectedFailureTest() throws Exception {
+    public void addFollowerWhenFollowerFollowsByUserExpectedFailureTest() {
         expectedException.expect(FollowerAlreadyFollowsException.class);
         expectedException.expectMessage("Given follower already follows by user!");
 
@@ -103,7 +105,7 @@ public class TwitterServiceTest {
     }
 
     @Test
-    public void removeFollowerWhenExistsTest() throws Exception {
+    public void removeFollowerWhenExistsTest() {
         // given
         User user = twitterService.createUser("user");
         User follower = twitterService.createUser("follower");
@@ -117,7 +119,7 @@ public class TwitterServiceTest {
     }
 
     @Test
-    public void removeFollowerWhenUserDoesNotExistExpectedFailureTest() throws Exception {
+    public void removeFollowerWhenUserDoesNotExistExpectedFailureTest() {
         expectedException.expect(UserNotFoundException.class);
         expectedException.expectMessage("Given user does not exist!");
 
@@ -130,7 +132,7 @@ public class TwitterServiceTest {
     }
 
     @Test
-    public void removeFollowerWhenFollowerDoesNotExistExpectedFailureTest() throws Exception {
+    public void removeFollowerWhenFollowerDoesNotExistExpectedFailureTest() {
         expectedException.expect(UserNotFoundException.class);
         expectedException.expectMessage("Given follower does not exist!");
 
