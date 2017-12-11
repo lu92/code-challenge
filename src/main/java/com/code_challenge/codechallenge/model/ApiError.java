@@ -1,4 +1,4 @@
-package com.code_challenge.codechallenge;
+package com.code_challenge.codechallenge.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -13,14 +13,13 @@ import org.springframework.validation.ObjectError;
 import javax.validation.ConstraintViolation;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
 @Data
 @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.CUSTOM, property = "error", visible = true)
 @JsonTypeIdResolver(LowerCaseClassNameResolver.class)
-class ApiError {
+public class ApiError {
 
     private HttpStatus status;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
@@ -33,19 +32,19 @@ class ApiError {
         timestamp = LocalDateTime.now();
     }
 
-    ApiError(HttpStatus status) {
+    public ApiError(HttpStatus status) {
         this();
         this.status = status;
     }
 
-    ApiError(HttpStatus status, Throwable ex) {
+    public ApiError(HttpStatus status, Throwable ex) {
         this();
         this.status = status;
         this.message = "Unexpected error";
         this.debugMessage = ex.getLocalizedMessage();
     }
 
-    ApiError(HttpStatus status, String message, Throwable ex) {
+    public ApiError(HttpStatus status, String message, Throwable ex) {
         this();
         this.status = status;
         this.message = message;
@@ -75,7 +74,7 @@ class ApiError {
                 fieldError.getDefaultMessage());
     }
 
-    void addValidationErrors(List<FieldError> fieldErrors) {
+    public void addValidationErrors(List<FieldError> fieldErrors) {
         fieldErrors.forEach(this::addValidationError);
     }
 
@@ -85,7 +84,7 @@ class ApiError {
                 objectError.getDefaultMessage());
     }
 
-    void addValidationError(List<ObjectError> globalErrors) {
+    public void addValidationError(List<ObjectError> globalErrors) {
         globalErrors.forEach(this::addValidationError);
     }
 
@@ -101,7 +100,7 @@ class ApiError {
                 cv.getMessage());
     }
 
-    void addValidationErrors(Set<ConstraintViolation<?>> constraintViolations) {
+    public void addValidationErrors(Set<ConstraintViolation<?>> constraintViolations) {
         constraintViolations.forEach(this::addValidationError);
     }
 

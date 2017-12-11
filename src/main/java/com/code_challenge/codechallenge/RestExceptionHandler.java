@@ -4,6 +4,7 @@ import com.code_challenge.codechallenge.exceptions.EntityNotFoundException;
 import com.code_challenge.codechallenge.exceptions.FollowerAlreadyFollowsException;
 import com.code_challenge.codechallenge.exceptions.UserAlreadyExistsException;
 import com.code_challenge.codechallenge.exceptions.UserNotFoundException;
+import com.code_challenge.codechallenge.model.ApiError;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;

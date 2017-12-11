@@ -3,14 +3,13 @@ package com.code_challenge.codechallenge.model;
 import com.code_challenge.codechallenge.exceptions.FollowerAlreadyFollowsException;
 import lombok.Data;
 
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Data
 public class User {
     private String nickname;
     private Set<User> followers = new HashSet<>();
+    private List<Tweet> tweets = new LinkedList<>();
 
 
     public User(String nickname) {
@@ -22,6 +21,10 @@ public class User {
             throw new FollowerAlreadyFollowsException("Given follower already follows by user!");
         }
         followers.add(follower);
+    }
+
+    public void addTweet(Tweet tweet) {
+        tweets.add(tweet);
     }
 
     @Override
