@@ -2,7 +2,6 @@ package com.code_challenge.codechallenge;
 
 import com.code_challenge.codechallenge.model.Tweet;
 import com.code_challenge.codechallenge.model.User;
-import com.code_challenge.codechallenge.model.Wall;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,6 +9,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.fest.assertions.Assertions.assertThat;
 
@@ -29,10 +29,10 @@ public class WallOfUserTest {
         User user = twitterService.createUser("user");
 
         // when
-        Wall wall = twitterService.getWall(user.getNickname());
+        List<Tweet> wall = twitterService.getWall(user.getNickname());
 
         // then
-        assertThat(wall.getTweets()).isEmpty();
+        assertThat(wall).isEmpty();
     }
 
     @Test
@@ -45,10 +45,10 @@ public class WallOfUserTest {
         Tweet expectedTweet = new Tweet(1l, user, "some tweet", expectedDateTime);
 
         // when
-        Wall wall = twitterService.getWall(user.getNickname());
+        List<Tweet> wall = twitterService.getWall(user.getNickname());
 
         // then
-        assertThat(wall.getTweets()).containsOnly(expectedTweet);
+        assertThat(wall).containsOnly(expectedTweet);
     }
 
     @Test
@@ -69,11 +69,49 @@ public class WallOfUserTest {
         Tweet expectedTweet3 = new Tweet(3l, user, "some tweet3", expectedDateTime3);
 
         // when
-        Wall wall = twitterService.getWall(user.getNickname());
+        List<Tweet> wall = twitterService.getWall(user.getNickname());
 
         // then
-        assertThat(wall.getTweets().get(0)).isEqualTo(expectedTweet1);
-        assertThat(wall.getTweets().get(1)).isEqualTo(expectedTweet2);
-        assertThat(wall.getTweets().get(2)).isEqualTo(expectedTweet3);
+        assertThat(wall.get(0)).isEqualTo(expectedTweet3);
+        assertThat(wall.get(1)).isEqualTo(expectedTweet2);
+        assertThat(wall.get(2)).isEqualTo(expectedTweet1);
+    }
+
+    @Test
+    public void userHasOneTweetWithTwoRetweetsFromFollowersTest() {
+        // given
+        User user = twitterService.createUser("user");
+        User follower1 = twitterService.createUser("follower1");
+        User follower2 = twitterService.createUser("follower2");
+        twitterService.addFollower(user.getNickname(), follower1.getNickname());
+        twitterService.addFollower(user.getNickname(), follower2.getNickname());
+
+        // when
+        Tweet usersTweet = twitterService.tweet(user.getNickname(), "user's tweet");
+        Tweet follower1Tweet = twitterService.retweet(follower1.getNickname(), usersTweet.getTweetId(), "follower1's tweet");
+        Tweet follower2Tweet = twitterService.retweet(follower2.getNickname(), usersTweet.getTweetId(), "follower2's tweet");
+
+        // then
+        List<Tweet> wall = twitterService.getWall(user.getNickname());
+        assertThat(wall).containsExactly(usersTweet);
+        assertThat(wall.get(0).getChildrenTweets()).containsSequence(follower2Tweet, follower1Tweet);
+    }
+
+    @Test
+    public void userHasOneTweetWithTwoRetweetsFromOtherUsersTest() {
+        // given
+        User user1 = twitterService.createUser("user1");
+        User user2 = twitterService.createUser("user2");
+        User user3 = twitterService.createUser("user3");
+
+        // when
+        Tweet user1Tweet = twitterService.tweet(user1.getNickname(), "user1's tweet");
+        Tweet user2Tweet = twitterService.retweet(user2.getNickname(), user1Tweet.getTweetId(), "user2's tweet");
+        Tweet user3Tweet = twitterService.retweet(user3.getNickname(), user1Tweet.getTweetId(), "user3's tweet");
+
+        // then
+        List<Tweet> wall = twitterService.getWall(user1.getNickname());
+        assertThat(wall).containsExactly(user1Tweet);
+        assertThat(wall.get(0).getChildrenTweets()).containsSequence(user3Tweet, user2Tweet);
     }
 }

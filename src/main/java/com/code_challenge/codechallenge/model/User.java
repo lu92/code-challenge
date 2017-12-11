@@ -9,6 +9,7 @@ import java.util.*;
 public class User {
     private String nickname;
     private Set<User> followers = new HashSet<>();
+    private Set<User> followedUsers = new HashSet<>();
     private List<Tweet> tweets = new LinkedList<>();
 
 
@@ -20,11 +21,16 @@ public class User {
         if (followers.contains(follower)) {
             throw new FollowerAlreadyFollowsException("Given follower already follows by user!");
         }
+        follower.followedUsers.add(this);
         followers.add(follower);
     }
 
+    public boolean isFollowed(User followedUser) {
+        return followedUsers.contains(followedUser);
+    }
+
     public void addTweet(Tweet tweet) {
-        tweets.add(tweet);
+        tweets.add(0, tweet);
     }
 
     @Override

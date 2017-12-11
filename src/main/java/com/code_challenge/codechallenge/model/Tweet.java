@@ -1,5 +1,6 @@
 package com.code_challenge.codechallenge.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
@@ -10,9 +11,13 @@ import java.util.List;
 import java.util.Objects;
 
 @Data
-public class Tweet {
+public class Tweet implements Comparable<Tweet> {
     private Long tweetId;
+
+    @JsonIgnore
     private User author;
+
+    @JsonIgnore
     private Tweet parentTweet;
     private List<Tweet> childrenTweets = new LinkedList<>();
     private LocalDateTime dateTime;
@@ -53,5 +58,10 @@ public class Tweet {
                 ", dateTime=" + dateTime +
                 ", message='" + message + '\'' +
                 '}';
+    }
+
+    @Override
+    public int compareTo(Tweet anotherTweet) {
+        return anotherTweet.getDateTime().compareTo(getDateTime());
     }
 }

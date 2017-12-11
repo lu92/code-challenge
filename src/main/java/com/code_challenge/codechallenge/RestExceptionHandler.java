@@ -1,9 +1,6 @@
 package com.code_challenge.codechallenge;
 
-import com.code_challenge.codechallenge.exceptions.EntityNotFoundException;
-import com.code_challenge.codechallenge.exceptions.FollowerAlreadyFollowsException;
-import com.code_challenge.codechallenge.exceptions.UserAlreadyExistsException;
-import com.code_challenge.codechallenge.exceptions.UserNotFoundException;
+import com.code_challenge.codechallenge.exceptions.*;
 import com.code_challenge.codechallenge.model.ApiError;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
@@ -143,6 +140,14 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleFollowerAlreadyFollows(
             FollowerAlreadyFollowsException ex) {
         ApiError apiError = new ApiError(BAD_REQUEST);
+        apiError.setMessage(ex.getMessage());
+        return buildResponseEntity(apiError);
+    }
+
+    @ExceptionHandler(TweetNotFoundException.class)
+    protected ResponseEntity<Object> handleTweetNotFound(
+            TweetNotFoundException ex) {
+        ApiError apiError = new ApiError(NOT_FOUND);
         apiError.setMessage(ex.getMessage());
         return buildResponseEntity(apiError);
     }

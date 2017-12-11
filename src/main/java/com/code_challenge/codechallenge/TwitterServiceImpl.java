@@ -1,16 +1,14 @@
 package com.code_challenge.codechallenge;
 
+import com.code_challenge.codechallenge.exceptions.TweetNotFoundException;
 import com.code_challenge.codechallenge.exceptions.UserAlreadyExistsException;
 import com.code_challenge.codechallenge.exceptions.UserNotFoundException;
 import com.code_challenge.codechallenge.model.Tweet;
 import com.code_challenge.codechallenge.model.User;
-import com.code_challenge.codechallenge.model.Wall;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
@@ -20,6 +18,7 @@ public class TwitterServiceImpl implements TwitterService {
 
     private IdGenerator idGenerator = new IdGenerator();
     private Map<String, User> users = new ConcurrentHashMap<>();
+    private Map<Long, Tweet> tweets = new ConcurrentHashMap<>();
 
     @Override
     public User createUser(String nickname) {
@@ -60,20 +59,40 @@ public class TwitterServiceImpl implements TwitterService {
         User user = getUser(userNickname);
         Tweet tweet = new Tweet(idGenerator.generate(), user, message, LocalDateTime.now());
         user.addTweet(tweet);
+        tweets.put(tweet.getTweetId(), tweet);
         return tweet;
     }
 
     @Override
     public Tweet retweet(String userNickname, Long parentTweetId, String message) {
-        // TODO
-        return null;
+        User user = getUser(userNickname);
+        Tweet parentTweet = retrieveTweet(parentTweetId);
+        Tweet newTweet = new Tweet(idGenerator.generate(), user, message, LocalDateTime.now());
+        newTweet.setParentTweet(parentTweet);
+        parentTweet.getChildrenTweets().add(0, newTweet);
+        return newTweet;
     }
 
     @Override
-    public Wall getWall(String userNickname) {
+    public List<Tweet> getWall(String userNickname) {
         User user = getUser(userNickname);
-        Wall wall = new Wall(user.getTweets());
-        return wall;
+        Collections.sort(user.getTweets());
+        return user.getTweets();
+    }
+
+    @Override
+    public List<Tweet> getTimeLine(String userNickname) {
+        User user = getUser(userNickname);
+        return tweets.values().stream()
+                .filter(tweet -> user.isFollowed(tweet.getAuthor()))
+                .filter(tweet -> tweet.getParentTweet() == null)
+                .sorted().collect(Collectors.toList());
+    }
+
+    private Tweet retrieveTweet(Long tweetId) {
+        return Optional.ofNullable(tweets.get(tweetId)).orElseThrow(
+                () -> new TweetNotFoundException("Given tweet does not exist!")
+        );
     }
 
     private User getUser(String userNickname) {
@@ -92,7 +111,8 @@ public class TwitterServiceImpl implements TwitterService {
 
     private class IdGenerator {
         private AtomicLong atomicLong = new AtomicLong(1);
-        public Long generate() {
+
+        Long generate() {
             return atomicLong.getAndIncrement();
         }
     }
