@@ -1,5 +1,6 @@
 package com.code_challenge.codechallenge.service;
 
+import com.code_challenge.codechallenge.exceptions.InvalidTweetException;
 import com.code_challenge.codechallenge.exceptions.TweetNotFoundException;
 import com.code_challenge.codechallenge.exceptions.UserAlreadyExistsException;
 import com.code_challenge.codechallenge.exceptions.UserNotFoundException;
@@ -13,13 +14,14 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
 public class TwitterServiceImpl implements TwitterService {
 
     private IdGenerator idGenerator = new IdGenerator();
-    private TweetValidator tweetValidator = new TweetValidator();
+    private MessageValidator messageValidator = new MessageValidator();
     private Map<String, User> users = new ConcurrentHashMap<>();
     private Map<Long, Tweet> tweets = new ConcurrentHashMap<>();
     private Lock lock = new ReentrantLock();
@@ -76,7 +78,7 @@ public class TwitterServiceImpl implements TwitterService {
     public Tweet tweet(String userNickname, String message) {
         lock.lock();
         try {
-            tweetValidator.validate(message);
+            messageValidator.validate(message);
             User user = getUser(userNickname);
             Tweet tweet = new Tweet(idGenerator.generate(), user, message, LocalDateTime.now());
             user.addTweet(tweet);
@@ -91,7 +93,7 @@ public class TwitterServiceImpl implements TwitterService {
     public Tweet retweet(String userNickname, Long parentTweetId, String message) {
         lock.lock();
         try {
-            tweetValidator.validate(message);
+            messageValidator.validate(message);
             User user = getUser(userNickname);
             Tweet parentTweet = retrieveTweet(parentTweetId);
             Tweet newTweet = new Tweet(idGenerator.generate(), user, message, LocalDateTime.now());
@@ -121,7 +123,7 @@ public class TwitterServiceImpl implements TwitterService {
 
     private Tweet retrieveTweet(Long tweetId) {
         return Optional.ofNullable(tweets.get(tweetId)).orElseThrow(
-                () -> new TweetNotFoundException()
+                TweetNotFoundException::new
         );
     }
 
@@ -144,6 +146,18 @@ public class TwitterServiceImpl implements TwitterService {
 
         Long generate() {
             return atomicLong.getAndIncrement();
+        }
+    }
+
+    private class MessageValidator {
+        private Predicate<String> notNull = Objects::nonNull;
+        private Predicate<String> validLength = message -> 1 <= message.length() && message.length() <= 140;
+        private Predicate<String> validTweetMessage = notNull.and(validLength);
+
+        void validate(String message) {
+            if (!validTweetMessage.test(message)) {
+                throw new InvalidTweetException();
+            }
         }
     }
 }
