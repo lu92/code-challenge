@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 public class TwitterController {
@@ -24,6 +25,11 @@ public class TwitterController {
     @ResponseBody String addFollower(@PathVariable("userNickname") String userNickname,
                                      @PathVariable("followerNickname") String followerNickname) {
         return twitterService.addFollower(userNickname, followerNickname);
+    }
+
+    @RequestMapping("/getFollowers/{userNickname}")
+    @ResponseBody Set<String> getFollowersForUser(@PathVariable("userNickname") String userNickname) {
+        return twitterService.getFollowersForUser(userNickname);
     }
 
     @RequestMapping(value = "/tweet/{userNickname}", method = RequestMethod.POST)

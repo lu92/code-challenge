@@ -23,34 +23,26 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(UserAlreadyExistsException.class)
-    protected ResponseEntity<Object> handleUserAlreadyExist(
-            UserAlreadyExistsException ex) {
-        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST);
-        apiError.setMessage(ex.getMessage());
+    protected ResponseEntity<Object> handleUserAlreadyExist(UserAlreadyExistsException ex) {
+        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, ex);
         return buildResponseEntity(apiError);
     }
 
     @ExceptionHandler(UserNotFoundException.class)
-    protected ResponseEntity<Object> handleUserNotFound(
-            UserNotFoundException ex) {
-        ApiError apiError = new ApiError(NOT_FOUND);
-        apiError.setMessage(ex.getMessage());
+    protected ResponseEntity<Object> handleUserNotFound(UserNotFoundException ex) {
+        ApiError apiError = new ApiError(NOT_FOUND, ex);
         return buildResponseEntity(apiError);
     }
 
     @ExceptionHandler(FollowerAlreadyFollowsException.class)
-    protected ResponseEntity<Object> handleFollowerAlreadyFollows(
-            FollowerAlreadyFollowsException ex) {
-        ApiError apiError = new ApiError(BAD_REQUEST);
-        apiError.setMessage(ex.getMessage());
+    protected ResponseEntity<Object> handleFollowerAlreadyFollows(FollowerAlreadyFollowsException ex) {
+        ApiError apiError = new ApiError(BAD_REQUEST, ex);
         return buildResponseEntity(apiError);
     }
 
     @ExceptionHandler(TweetNotFoundException.class)
-    protected ResponseEntity<Object> handleTweetNotFound(
-            TweetNotFoundException ex) {
-        ApiError apiError = new ApiError(NOT_FOUND);
-        apiError.setMessage(ex.getMessage());
+    protected ResponseEntity<Object> handleTweetNotFound(TweetNotFoundException ex) {
+        ApiError apiError = new ApiError(NOT_FOUND, ex);
         return buildResponseEntity(apiError);
     }
 

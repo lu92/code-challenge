@@ -23,11 +23,10 @@ public class Tweet implements Comparable<Tweet> {
     @JsonIgnore
     private Tweet parentTweet;
 
-    private List<Tweet> childrenTweets = new LinkedList<>();
-
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime dateTime;
 
+    private List<Tweet> childrenTweets = new LinkedList<>();
     private String message;
 
     public Tweet(Long tweetId, User author, String message, LocalDateTime dateTime) {
