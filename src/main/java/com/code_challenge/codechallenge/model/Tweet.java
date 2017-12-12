@@ -2,28 +2,32 @@ package com.code_challenge.codechallenge.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
-@Data
 public class Tweet implements Comparable<Tweet> {
+
+    @Getter
     private Long tweetId;
 
-    @JsonIgnore
+    @Getter @JsonIgnore
     private User author;
 
-    @JsonIgnore
+    @Getter @Setter @JsonIgnore
     private Tweet parentTweet;
+
+    @Getter
     private List<Tweet> childrenTweets = new LinkedList<>();
+
+    @Getter
     private LocalDateTime dateTime;
 
-    @NotNull
-    @Size(min = 1, max = 140)
+    @Getter
     private String message;
 
     public Tweet(Long tweetId, User author, String message, LocalDateTime dateTime) {

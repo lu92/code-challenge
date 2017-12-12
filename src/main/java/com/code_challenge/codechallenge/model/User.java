@@ -2,14 +2,21 @@ package com.code_challenge.codechallenge.model;
 
 import com.code_challenge.codechallenge.exceptions.FollowerAlreadyFollowsException;
 import lombok.Data;
+import lombok.Getter;
 
 import java.util.*;
 
-@Data
 public class User {
+    @Getter
     private String nickname;
+
+    @Getter
     private Set<User> followers = new HashSet<>();
+
+    @Getter
     private Set<User> followedUsers = new HashSet<>();
+
+    @Getter
     private List<Tweet> tweets = new LinkedList<>();
 
 
