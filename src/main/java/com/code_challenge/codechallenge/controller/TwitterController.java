@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-class TwitterController {
+public class TwitterController {
 
     @Autowired
     private TwitterService twitterService;

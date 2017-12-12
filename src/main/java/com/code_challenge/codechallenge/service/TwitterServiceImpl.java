@@ -5,13 +5,14 @@ import com.code_challenge.codechallenge.exceptions.UserAlreadyExistsException;
 import com.code_challenge.codechallenge.exceptions.UserNotFoundException;
 import com.code_challenge.codechallenge.model.Tweet;
 import com.code_challenge.codechallenge.model.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,15 +22,21 @@ public class TwitterServiceImpl implements TwitterService {
     private TweetValidator tweetValidator = new TweetValidator();
     private Map<String, User> users = new ConcurrentHashMap<>();
     private Map<Long, Tweet> tweets = new ConcurrentHashMap<>();
+    private Lock lock = new ReentrantLock();
 
     @Override
     public User createUser(String nickname) {
-        if (users.containsKey(nickname)) {
-            throw new UserAlreadyExistsException();
-        } else {
-            User user = new User(nickname);
-            users.put(nickname, user);
-            return user;
+        lock.lock();
+        try {
+            if (users.containsKey(nickname)) {
+                throw new UserAlreadyExistsException();
+            } else {
+                User user = new User(nickname);
+                users.put(nickname, user);
+                return user;
+            }
+        } finally {
+            lock.unlock();
         }
     }
 
@@ -41,40 +48,59 @@ public class TwitterServiceImpl implements TwitterService {
 
     @Override
     public String addFollower(String userNickname, String followerNickname) {
-        User user = getUser(userNickname);
-        User follower = getFollower(followerNickname);
-
-        user.addFollower(follower);
-        return "Given follower has been added to followers of user";
+        lock.lock();
+        try {
+            User user = getUser(userNickname);
+            User follower = getFollower(followerNickname);
+            user.addFollower(follower);
+            return "Given follower has been added to followers of user";
+        } finally {
+            lock.unlock();
+        }
     }
 
     @Override
     public String removeFollower(String userNickname, String followerNickname) {
-        User user = getUser(userNickname);
-        User follower = getFollower(followerNickname);
-        user.getFollowers().remove(follower);
-        return "Now follower does not follow by user!";
+        lock.lock();
+        try {
+            User user = getUser(userNickname);
+            User follower = getFollower(followerNickname);
+            user.getFollowers().remove(follower);
+            return "Now follower does not follow by user!";
+        } finally {
+            lock.unlock();
+        }
     }
 
     @Override
     public Tweet tweet(String userNickname, String message) {
-        tweetValidator.validate(message);
-        User user = getUser(userNickname);
-        Tweet tweet = new Tweet(idGenerator.generate(), user, message, LocalDateTime.now());
-        user.addTweet(tweet);
-        tweets.put(tweet.getTweetId(), tweet);
-        return tweet;
+        lock.lock();
+        try {
+            tweetValidator.validate(message);
+            User user = getUser(userNickname);
+            Tweet tweet = new Tweet(idGenerator.generate(), user, message, LocalDateTime.now());
+            user.addTweet(tweet);
+            tweets.put(tweet.getTweetId(), tweet);
+            return tweet;
+        } finally {
+            lock.unlock();
+        }
     }
 
     @Override
     public Tweet retweet(String userNickname, Long parentTweetId, String message) {
-        tweetValidator.validate(message);
-        User user = getUser(userNickname);
-        Tweet parentTweet = retrieveTweet(parentTweetId);
-        Tweet newTweet = new Tweet(idGenerator.generate(), user, message, LocalDateTime.now());
-        newTweet.setParentTweet(parentTweet);
-        parentTweet.getChildrenTweets().add(0, newTweet);
-        return newTweet;
+        lock.lock();
+        try {
+            tweetValidator.validate(message);
+            User user = getUser(userNickname);
+            Tweet parentTweet = retrieveTweet(parentTweetId);
+            Tweet newTweet = new Tweet(idGenerator.generate(), user, message, LocalDateTime.now());
+            newTweet.setParentTweet(parentTweet);
+            parentTweet.getChildrenTweets().add(0, newTweet);
+            return newTweet;
+        } finally {
+            lock.unlock();
+        }
     }
 
     @Override

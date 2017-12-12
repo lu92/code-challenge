@@ -1,33 +1,33 @@
 package com.code_challenge.codechallenge.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
+@Data
+@NoArgsConstructor
 public class Tweet implements Comparable<Tweet> {
 
-    @Getter
     private Long tweetId;
 
-    @Getter @JsonIgnore
+    @JsonIgnore
     private User author;
 
-    @Getter @Setter @JsonIgnore
+    @JsonIgnore
     private Tweet parentTweet;
 
-    @Getter
     private List<Tweet> childrenTweets = new LinkedList<>();
 
-    @Getter
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime dateTime;
 
-    @Getter
     private String message;
 
     public Tweet(Long tweetId, User author, String message, LocalDateTime dateTime) {
