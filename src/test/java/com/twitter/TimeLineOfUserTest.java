@@ -1,9 +1,9 @@
-package com.code_challenge.codechallenge;
+package com.twitter;
 
-import com.code_challenge.codechallenge.model.Tweet;
-import com.code_challenge.codechallenge.model.User;
-import com.code_challenge.codechallenge.service.TwitterService;
-import com.code_challenge.codechallenge.service.TwitterServiceImpl;
+import com.twitter.model.Tweet;
+import com.twitter.model.User;
+import com.twitter.service.TwitterService;
+import com.twitter.service.TwitterServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

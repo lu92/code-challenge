@@ -1,8 +1,8 @@
-package com.code_challenge.codechallenge.controller;
+package com.twitter.controller;
 
-import com.code_challenge.codechallenge.model.Tweet;
-import com.code_challenge.codechallenge.model.User;
-import com.code_challenge.codechallenge.service.TwitterService;
+import com.twitter.model.Tweet;
+import com.twitter.model.User;
+import com.twitter.service.TwitterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

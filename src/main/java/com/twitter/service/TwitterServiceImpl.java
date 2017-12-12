@@ -1,11 +1,11 @@
-package com.code_challenge.codechallenge.service;
+package com.twitter.service;
 
-import com.code_challenge.codechallenge.exceptions.InvalidTweetException;
-import com.code_challenge.codechallenge.exceptions.TweetNotFoundException;
-import com.code_challenge.codechallenge.exceptions.UserAlreadyExistsException;
-import com.code_challenge.codechallenge.exceptions.UserNotFoundException;
-import com.code_challenge.codechallenge.model.Tweet;
-import com.code_challenge.codechallenge.model.User;
+import com.twitter.exceptions.InvalidTweetException;
+import com.twitter.exceptions.TweetNotFoundException;
+import com.twitter.exceptions.UserAlreadyExistsException;
+import com.twitter.exceptions.UserNotFoundException;
+import com.twitter.model.Tweet;
+import com.twitter.model.User;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;

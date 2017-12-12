@@ -1,7 +1,7 @@
-package com.code_challenge.codechallenge.service;
+package com.twitter.service;
 
-import com.code_challenge.codechallenge.model.Tweet;
-import com.code_challenge.codechallenge.model.User;
+import com.twitter.model.Tweet;
+import com.twitter.model.User;
 
 import java.util.List;
 import java.util.Set;

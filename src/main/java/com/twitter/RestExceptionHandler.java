@@ -1,10 +1,10 @@
-package com.code_challenge.codechallenge;
+package com.twitter;
 
-import com.code_challenge.codechallenge.exceptions.FollowerAlreadyFollowsException;
-import com.code_challenge.codechallenge.exceptions.TweetNotFoundException;
-import com.code_challenge.codechallenge.exceptions.UserAlreadyExistsException;
-import com.code_challenge.codechallenge.exceptions.UserNotFoundException;
-import com.code_challenge.codechallenge.model.ApiError;
+import com.twitter.exceptions.FollowerAlreadyFollowsException;
+import com.twitter.exceptions.TweetNotFoundException;
+import com.twitter.exceptions.UserAlreadyExistsException;
+import com.twitter.exceptions.UserNotFoundException;
+import com.twitter.model.ApiError;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;

@@ -1,7 +1,6 @@
-package com.code_challenge.codechallenge.model;
+package com.twitter.model;
 
-import com.code_challenge.codechallenge.exceptions.FollowerAlreadyFollowsException;
-import lombok.Data;
+import com.twitter.exceptions.FollowerAlreadyFollowsException;
 import lombok.Getter;
 
 import java.util.*;

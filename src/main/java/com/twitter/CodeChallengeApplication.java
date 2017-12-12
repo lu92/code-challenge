@@ -1,4 +1,4 @@
-package com.code_challenge.codechallenge;
+package com.twitter;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

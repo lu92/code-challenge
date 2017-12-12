@@ -1,4 +1,4 @@
-package com.code_challenge.codechallenge.model;
+package com.twitter.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

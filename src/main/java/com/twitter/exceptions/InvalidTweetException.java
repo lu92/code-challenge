@@ -1,4 +1,4 @@
-package com.code_challenge.codechallenge.exceptions;
+package com.twitter.exceptions;
 
 public class InvalidTweetException extends RuntimeException {
     public InvalidTweetException() {

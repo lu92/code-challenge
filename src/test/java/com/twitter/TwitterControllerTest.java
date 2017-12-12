@@ -1,11 +1,11 @@
-package com.code_challenge.codechallenge;
+package com.twitter;
 
-import com.code_challenge.codechallenge.controller.TwitterController;
-import com.code_challenge.codechallenge.exceptions.UserNotFoundException;
-import com.code_challenge.codechallenge.model.ApiError;
-import com.code_challenge.codechallenge.model.Tweet;
-import com.code_challenge.codechallenge.model.User;
-import com.code_challenge.codechallenge.service.TwitterService;
+import com.twitter.controller.TwitterController;
+import com.twitter.exceptions.UserNotFoundException;
+import com.twitter.model.ApiError;
+import com.twitter.model.Tweet;
+import com.twitter.model.User;
+import com.twitter.service.TwitterService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;

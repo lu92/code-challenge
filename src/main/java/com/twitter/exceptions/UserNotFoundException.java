@@ -1,4 +1,4 @@
-package com.code_challenge.codechallenge.exceptions;
+package com.twitter.exceptions;
 
 public class UserNotFoundException extends RuntimeException {
 

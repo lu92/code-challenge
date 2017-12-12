@@ -1,4 +1,4 @@
-package com.code_challenge.codechallenge.model.deserializer;
+package com.twitter.model.deserializer;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;

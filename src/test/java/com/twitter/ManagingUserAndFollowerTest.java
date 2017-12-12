@@ -1,11 +1,11 @@
-package com.code_challenge.codechallenge;
+package com.twitter;
 
-import com.code_challenge.codechallenge.exceptions.FollowerAlreadyFollowsException;
-import com.code_challenge.codechallenge.exceptions.UserAlreadyExistsException;
-import com.code_challenge.codechallenge.exceptions.UserNotFoundException;
-import com.code_challenge.codechallenge.model.User;
-import com.code_challenge.codechallenge.service.TwitterService;
-import com.code_challenge.codechallenge.service.TwitterServiceImpl;
+import com.twitter.exceptions.FollowerAlreadyFollowsException;
+import com.twitter.exceptions.UserAlreadyExistsException;
+import com.twitter.exceptions.UserNotFoundException;
+import com.twitter.model.User;
+import com.twitter.service.TwitterService;
+import com.twitter.service.TwitterServiceImpl;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

@@ -1,4 +1,4 @@
-package com.code_challenge.codechallenge.model;
+package com.twitter.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
