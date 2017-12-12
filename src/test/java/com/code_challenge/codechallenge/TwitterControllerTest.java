@@ -44,20 +44,6 @@ public class TwitterControllerTest {
     private TwitterService twitterService;
 
     @Test
-    public void getWallTest() throws Exception {
-        Tweet tweet = new Tweet(1L, new User("user1"), "message", LocalDateTime.now());
-        Mockito.when(
-                twitterService.getWall(Mockito.anyString())).thenReturn(Arrays.asList(tweet));
-
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.get(
-                "/getWall/user1").accept(
-                MediaType.APPLICATION_JSON);
-
-        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-        List<Tweet> tweets = objectMapper.readValue(result.getResponse().getContentAsString(), objectMapper.getTypeFactory().constructCollectionType(List.class, Tweet.class));
-    }
-
-    @Test
     public void createUserWhenExistsExpectedFailureTest() throws Exception {
         // given
         Mockito.when(twitterService.createUser(Mockito.anyString())).thenThrow(new UserNotFoundException("Given nickname is used by other user!"));
