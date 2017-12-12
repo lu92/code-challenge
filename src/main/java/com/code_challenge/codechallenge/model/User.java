@@ -19,7 +19,7 @@ public class User {
 
     public void addFollower(User follower) {
         if (followers.contains(follower)) {
-            throw new FollowerAlreadyFollowsException("Given follower already follows by user!");
+            throw new FollowerAlreadyFollowsException();
         }
         follower.followedUsers.add(this);
         followers.add(follower);

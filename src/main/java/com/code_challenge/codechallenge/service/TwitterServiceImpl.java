@@ -5,6 +5,7 @@ import com.code_challenge.codechallenge.exceptions.UserAlreadyExistsException;
 import com.code_challenge.codechallenge.exceptions.UserNotFoundException;
 import com.code_challenge.codechallenge.model.Tweet;
 import com.code_challenge.codechallenge.model.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -17,13 +18,14 @@ import java.util.stream.Collectors;
 public class TwitterServiceImpl implements TwitterService {
 
     private IdGenerator idGenerator = new IdGenerator();
+    private TweetValidator tweetValidator = new TweetValidator();
     private Map<String, User> users = new ConcurrentHashMap<>();
     private Map<Long, Tweet> tweets = new ConcurrentHashMap<>();
 
     @Override
     public User createUser(String nickname) {
         if (users.containsKey(nickname)) {
-            throw new UserAlreadyExistsException("Given nickname is used by other user!");
+            throw new UserAlreadyExistsException();
         } else {
             User user = new User(nickname);
             users.put(nickname, user);
@@ -56,6 +58,7 @@ public class TwitterServiceImpl implements TwitterService {
 
     @Override
     public Tweet tweet(String userNickname, String message) {
+        tweetValidator.validate(message);
         User user = getUser(userNickname);
         Tweet tweet = new Tweet(idGenerator.generate(), user, message, LocalDateTime.now());
         user.addTweet(tweet);
@@ -65,6 +68,7 @@ public class TwitterServiceImpl implements TwitterService {
 
     @Override
     public Tweet retweet(String userNickname, Long parentTweetId, String message) {
+        tweetValidator.validate(message);
         User user = getUser(userNickname);
         Tweet parentTweet = retrieveTweet(parentTweetId);
         Tweet newTweet = new Tweet(idGenerator.generate(), user, message, LocalDateTime.now());
@@ -91,7 +95,7 @@ public class TwitterServiceImpl implements TwitterService {
 
     private Tweet retrieveTweet(Long tweetId) {
         return Optional.ofNullable(tweets.get(tweetId)).orElseThrow(
-                () -> new TweetNotFoundException("Given tweet does not exist!")
+                () -> new TweetNotFoundException()
         );
     }
 

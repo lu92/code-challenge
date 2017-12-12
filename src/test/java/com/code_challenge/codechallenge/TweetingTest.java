@@ -1,5 +1,6 @@
 package com.code_challenge.codechallenge;
 
+import com.code_challenge.codechallenge.exceptions.InvalidTweetException;
 import com.code_challenge.codechallenge.exceptions.TweetNotFoundException;
 import com.code_challenge.codechallenge.exceptions.UserNotFoundException;
 import com.code_challenge.codechallenge.model.Tweet;
@@ -64,7 +65,7 @@ public class TweetingTest {
         ReflectionTestUtils.setField(tweet2, "dateTime", expectedDateTime2);
 
         // then
-        assertThat(user.getTweets()).containsExactly(expectedTweet1, expectedTweet2);
+        assertThat(user.getTweets()).containsExactly(expectedTweet2, expectedTweet1);
 
         user.getTweets().forEach(tweet -> {
             assertThat(tweet.getChildrenTweets()).isEmpty();
@@ -181,7 +182,7 @@ public class TweetingTest {
         Tweet followersTweet3 = twitterService.retweet(follower.getNickname(), usersTweet.getTweetId(), "follower's tweet3");
 
         // then
-        assertThat(usersTweet.getChildrenTweets()).containsExactly(followersTweet1, followersTweet2, followersTweet3);
+        assertThat(usersTweet.getChildrenTweets()).containsExactly(followersTweet3, followersTweet2, followersTweet1);
         Stream.of(followersTweet1, followersTweet2, followersTweet3).forEach(followersTweet -> {
             assertThat(followersTweet.getParentTweet()).isEqualTo(usersTweet);
             assertThat(followersTweet.getChildrenTweets()).isEmpty();
@@ -202,6 +203,43 @@ public class TweetingTest {
         assertThat(firstUsersTweet.getChildrenTweets()).containsExactly(secondUsersTweet);
         assertThat(secondUsersTweet.getParentTweet()).isEqualTo(firstUsersTweet);
         assertThat(secondUsersTweet.getChildrenTweets()).isEmpty();
+    }
+
+    @Test
+    public void messageOfTweetInNullExpectedFailureTest() {
+        expectedException.expect(InvalidTweetException.class);
+        expectedException.expectMessage("Message of tweet is invalid!");
+
+        // given
+        User user = twitterService.createUser("user");
+
+        // when
+        twitterService.tweet(user.getNickname(), null);
+    }
+
+    @Test
+    public void messageOfTweetIsEmptyExpectedFailureTest() {
+        expectedException.expect(InvalidTweetException.class);
+        expectedException.expectMessage("Message of tweet is invalid!");
+
+        // given
+        User user = twitterService.createUser("user");
+
+        // when
+        twitterService.tweet(user.getNickname(), "");
+    }
+
+    @Test
+    public void messageOfTweetExceed140CharactersExpectedFailureTest() {
+        expectedException.expect(InvalidTweetException.class);
+        expectedException.expectMessage("Message of tweet is invalid!");
+
+        // given
+        User user = twitterService.createUser("user");
+        String longMessage = new String(new char[141]).replace('\0', 'a');
+
+        // when
+        twitterService.tweet(user.getNickname(), longMessage);
     }
 
 }

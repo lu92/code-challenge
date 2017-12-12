@@ -38,7 +38,7 @@ public class WallOfUserTest {
     }
 
     @Test
-    public void userHasOneTweet() {
+    public void userHasOneTweetTest() {
         //given
         User user = twitterService.createUser("user");
         Tweet tweet = twitterService.tweet(user.getNickname(), "some tweet");
@@ -54,7 +54,7 @@ public class WallOfUserTest {
     }
 
     @Test
-    public void userHasThreeTweet() {
+    public void userHasThreeTweetTest() {
         //given
         User user = twitterService.createUser("user");
         Tweet tweet1 = twitterService.tweet(user.getNickname(), "some tweet1");
