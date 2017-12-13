@@ -13,7 +13,7 @@ https://docs.docker.com/engine/installation/#desktop
 
 
 
-helpfull commands related with Docker:
+helpful commands related with Docker:
 - show all running containers: <b>docker ps</b>
 - stop running container:
     <br>find <b>CONTAINER_ID</b> in result of: <b>docker ps</b>
