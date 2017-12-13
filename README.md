@@ -19,3 +19,17 @@ helpfull commands related with Docker:
     <br>find <b>CONTAINER_ID</b> in result of: <b>docker ps</b>
     <br>stop container by using       :<b>docker stop CONTAINER_ID</b>
 - run internal bash layer in container: <b>docker exec -it CONTAINER_ID  /bin/bash</b>
+
+# REST API:
+    [POST] CREATE_USER("/createUser/{userNickname}"),
+    [POST] SUBSCRIBE("/addFollower/{userNickname}/{followedNickname}"),
+    [GET]  GET_FOLLOWERS("/getFollowers/{userNickname})
+    [POST] TWEET("/tweet/{userNickname}") [CONTENT] (message),
+    [POST] RETWEET("/tweet/{userNickname}/{parentTweetId}") [CONTENT] (message),
+    [GET]  GET_TWEETS_WALL("/getWall/{userNickname}"),
+    [GET]  GET_TWEETS_TIMELINE("/getTimeline/{userNickname}");
+    
+userNickname: String</br>
+followerNickname: String</br>
+parentTweetId: int</br>
+message: String
