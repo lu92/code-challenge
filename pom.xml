@@ -5,7 +5,6 @@
 
 	<groupId>com.code_challenge</groupId>
 	<artifactId>code-challenge</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>code-challenge</name>
@@ -68,6 +67,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
+		<finalName>code-challenge</finalName>
 	</build>
 
 
